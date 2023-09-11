@@ -2,7 +2,7 @@
 
 import { uploadToS3 } from '@/lib/s3';
 import { useMutation } from '@tanstack/react-query';
-import { Inbox } from 'lucide-react';
+import { Inbox, Loader2 } from 'lucide-react';
 import React, { useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import axios from 'axios'
@@ -42,11 +42,14 @@ const FileUpload = () => {
                 console.log(data)
 
                 mutate(data, {
-                    onSuccess: (data) => {
-                        console.log(data)
+                    onSuccess: ({ chatId }) => {
+                        toast.success('Chat created')
+                        console.log(chatId)
+                        window.location.href = `/chat/${chatId}`
                     },
                     onError: (err) => {
                         toast.error('Error creating chat')
+                        console.log(data)
                         console.log(err)
                     }
 
@@ -68,6 +71,16 @@ const FileUpload = () => {
                 className: ' border-dashed border-2 cursor-pointer bg-gray-50 py-8 flex justify-center items-center flex-col'
             })}>
                 <input {...getInputProps()}/>
+                { (uploading || isLoading) ? (
+                    <>
+                        {/* Loading State */}
+                        <Loader2 className='w-10 h-10 text-blue-500 animate-spin'/>
+                        <p className='mt-2 text-sm text-slate-400'>Reading Document...</p>
+                    </>
+                ):(
+                    <>
+                    </>
+                )}
                 <>
                     <Inbox className='w-10 h-10 text-blue-500'/>
                     <p className='mt-2 text-sm text-slate-400'>Drop PDF here</p>
