@@ -1,15 +1,26 @@
 import { cn } from '@/lib/utils'
 import { Message } from 'ai/react'
+import { Loader2 } from 'lucide-react';
 import React from 'react'
 
 type Props = {
-    messages: Message[]
+    messages: Message[];
+    isLoading: boolean;
 }
 
-const Messages = ({ messages }: Props) => {
+const Messages = ({ messages, isLoading}: Props) => {
 
     if (!messages){
         return <></>
+    }
+
+    if (isLoading) {
+        console.log('loading')
+        return (
+            <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
+                <Loader2 className='h-66' />
+            </div>
+        )
     }
 
     return (

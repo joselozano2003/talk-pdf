@@ -13,12 +13,12 @@ export async function getMatchesFromEmbeddings(embeddings: number[], fileKey: st
     try {
         const namespace = toAscii(fileKey);
         const queryResult = await index.query({
-        queryRequest: {
-            topK: 5,
-            vector: embeddings,
-            includeMetadata: true,
-            namespace,
-        },
+            queryRequest: {
+                topK: 5,
+                vector: embeddings,
+                includeMetadata: true,
+                namespace,
+            },
         });
         return queryResult.matches || [];
     } catch (error) {
