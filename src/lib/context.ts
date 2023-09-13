@@ -8,7 +8,7 @@ export async function getMatchesFromEmbeddings(embeddings: number[], fileKey: st
         apiKey: process.env.PINECONE_API_KEY!,
         environment: process.env.PINECONE_ENVIRONMENT!,
     });
-  const index = await pinecone.Index("talk-pdf");
+    const index = await pinecone.Index("talk-pdf");
 
     try {
         const namespace = toAscii(fileKey);
@@ -22,7 +22,7 @@ export async function getMatchesFromEmbeddings(embeddings: number[], fileKey: st
         });
         return queryResult.matches || [];
     } catch (error) {
-        console.log("error querying embeddings", error);
+        console.log("Error querying embeddings", error);
         throw error;
     }
 }
