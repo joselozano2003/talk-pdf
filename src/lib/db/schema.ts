@@ -22,3 +22,13 @@ export const messages = pgTable('messages',{
 })
 
 export type DrizzleChat = typeof chats.$inferInsert;
+
+
+export const userSubscriptions = pgTable('userSubscriptions',{
+    id: serial('id').primaryKey(),
+    userId: varchar('userId', {length:256}).notNull().unique(),
+    stripeCustomerId: varchar('stripeCustomerId', {length:256}).notNull().unique(),
+    stripeSubscriptionId: varchar('stripeSubscriptionId', {length:256}).unique(),
+    stripePriceId: varchar('stripePriceId', {length:256}),
+    stripeCurrentPeriodEnd: timestamp('stripeCurrentPeriodEnd'),
+})

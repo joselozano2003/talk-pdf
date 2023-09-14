@@ -43,11 +43,11 @@ const ChatPage = async ({ params: { chatId }}: Props) => {
                     <ChatSideBar chats={_chats} chatId={parseInt(chatId)} isPro={isPro} />
                 </div>
                 {/* pdf viewer */}
-                <div className="max-h-screen p-4 oveflow-scroll flex-[5]">
+                <div className="max-h-screen p-4 overflow-scroll flex-[5]">
                     <PDFViewer pdfUrl={currentChat?.pdfUrl || ""} />
                 </div>
                 {/* chat component */}
-                <div className="flex-[3] border-l-4 border-l-slate-200">
+                <div className="flex-[3] border-l-4 border-l-slate-200 overflow-scroll">
                     <ChatInput chatId={parseInt(chatId)} />
                 </div>
             </div>

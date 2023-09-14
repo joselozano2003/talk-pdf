@@ -24,7 +24,7 @@ const Messages = ({ messages, isLoading}: Props) => {
     }
 
     return (
-        <div className='flex flex-col gap-2 px-4'>
+        <div className='flex flex-col gap-2 px-4 pb-1'>
             {messages.map((message) => {
                 return(
                     <div key={message.id} className={cn('flex', {

@@ -3,12 +3,25 @@ import { UserButton, auth } from '@clerk/nextjs'
 import Link from 'next/link'
 import { LogIn } from 'lucide-react'
 import FileUpload from '@/components/FileUpload'
+
+import { db } from "@/lib/db";
+import { chats } from '@/lib/db/schema'
+import { eq } from 'drizzle-orm'
+
 //29.09
 export default async function Home() {
+
+	let firstChatId = null;
 
 	const { userId } : { userId: string | null } = auth();
 
 	const isAuth = !!userId
+
+	const userChats = await db.select().from(chats).where(eq(chats.userId, userId!))
+
+	if (userId) {
+		firstChatId = userChats[0].id
+	}
 
 	return (
 		<div className='w-screen min-h-screen bg-gradient-to-r from-white via-cyan-400 to-rose-100'>
@@ -20,7 +33,11 @@ export default async function Home() {
 					</div>
 
 					<div className='flex mt-2'>
-						{isAuth && <Button>Go to Chats</Button>}
+						{isAuth && 
+							<Link href={`/chat/${firstChatId}`}>
+								<Button>Go to Chats</Button>
+							</Link>
+						}
 					</div>
 
 					<p className='max-w-xl mt-2 text-lg text-slate-600'>Join hundreds of students, professor and researchers to understand documents in matter of seconds</p>
