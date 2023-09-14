@@ -37,10 +37,10 @@ const ChatPage = async ({ params: { chatId }}: Props) => {
 
     const currentChat = _chats.find(chat => chat.id === parseInt(chatId))
     return (
-        <div className="flex max-h-screen">
-            <div className="flex w-full max-h-screen">
+        <div className="flex min-h-screen">
+            <div className="flex w-full min-h-screen">
                 {/* chat sidebar */}
-                <div className="flex-[1] min-w-max overflow-scroll">
+                <div className="flex-[1] min-w-max min-h-screen overflow-scroll">
                     <ChatSideBar chats={_chats} chatId={parseInt(chatId)} isPro={isPro} />
                 </div>
                 {/* pdf viewer */}
