@@ -6,31 +6,26 @@ import { chats, messages as _messages } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
-
-export const runtime = 'edge'   
+export const runtime = "edge";
 
 const config = new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
-})
+  apiKey: process.env.OPENAI_API_KEY,
+});
+const openai = new OpenAIApi(config);
 
-const openAi = new OpenAIApi(config)
-
-export async function POST(req: Request){
+export async function POST(req: Request) {
     try {
         const { messages, chatId } = await req.json();
-
-        const _chats = await db.select().from(chats).where(eq(chats.id, chatId))
-
-        if(_chats.length != 1){
-            return NextResponse.json({ error: "Chat not found!" }, { status: 404 })
+        const _chats = await db.select().from(chats).where(eq(chats.id, chatId));
+        if (_chats.length != 1) {
+            return NextResponse.json({ error: "chat not found" }, { status: 404 });
         }
-
         const fileKey = _chats[0].fileKey;
+        const lastMessage = messages[messages.length - 1];
+        const context = await getContext(lastMessage.content, fileKey);
 
-        const lastMessage = messages[messages.length - 1]
-
-        const context = await getContext(lastMessage, fileKey)
-
+        console.log("context", context);
+        
         const prompt = {
             role: "system",
             content: `AI assistant is a brand new, powerful, human-like artificial intelligence.
@@ -49,39 +44,34 @@ export async function POST(req: Request){
             `,
         };
 
-        const response = await openAi.createChatCompletion({
-            model: 'gpt-3.5-turbo',
+        const response = await openai.createChatCompletion({
+            model: "gpt-3.5-turbo",
             messages: [
                 prompt,
                 ...messages.filter((message: Message) => message.role === "user"),
-              ],
+            ],
             stream: true,
-        })
+        });
 
         const stream = OpenAIStream(response, {
             onStart: async () => {
+                // save user message into db
                 await db.insert(_messages).values({
                     chatId,
                     content: lastMessage.content,
                     role: "user",
-                })
+                });
             },
             onCompletion: async (completion) => {
+                // save ai message into db
                 await db.insert(_messages).values({
-                    chatId,
-                    content: completion,
-                    role: "system",
-                })
-            }
-        })
+                chatId,
+                content: completion,
+                role: "system",
+                });
+            },
+        });
 
-        return new StreamingTextResponse(stream)
-
-    }
-    catch(error){
-        return NextResponse.json(
-            { error: "Internal Server Error!" },
-            { status: 500 }
-        )
-    }
+    return new StreamingTextResponse(stream);
+  } catch (error) {}
 }

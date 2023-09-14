@@ -23,7 +23,6 @@ const FileUpload = () => {
         accept: {"application/pdf": [".pdf"]},
         maxFiles: 1,
         onDrop: async (acceptedFiles) => {
-            console.log(acceptedFiles)
             const file = acceptedFiles[0]
 
             if (file.size > 10 * 1024 * 1024){
@@ -39,12 +38,10 @@ const FileUpload = () => {
                     toast.error('Error uploading file')
                     return
                 }
-                console.log(data)
 
                 mutate(data, {
                     onSuccess: ({ chatId }) => {
                         toast.success('Chat created')
-                        console.log(chatId)
                         window.location.href = `/chat/${chatId}`
                     },
                     onError: (err) => {

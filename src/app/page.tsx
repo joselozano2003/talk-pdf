@@ -21,10 +21,8 @@ export default async function Home() {
 
 	if (userId) {
 		firstChatId = await db.select().from(chats).where(eq(chats.userId, userId!))
-		console.log(firstChatId)
 		if (firstChatId){
 			firstChatId = firstChatId[0]
-			console.log(firstChatId)
 		}
 	}
 

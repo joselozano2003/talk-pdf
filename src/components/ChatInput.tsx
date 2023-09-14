@@ -21,28 +21,30 @@ const ChatInput = ({ chatId }: Props) => {
 	const { data, isLoading } = useQuery({
 		queryKey: ["chat", chatId],
 		queryFn: async () => {
-		  	const response = await axios.post< Message[] >("/api/get-messages", { chatId });
-		  	return response.data;
+			const response = await axios.post<Message[]>("/api/get-messages", {
+				chatId,
+			});
+			return response.data;
 		},
-	});
+	  });
 
 	const { input, handleInputChange, handleSubmit, messages } = useChat({
-		api: '/api/chat',
+		api: "/api/chat",
 		body: {
-			chatId
+		  	chatId,
 		},
-		initialMessages: data || []
-	})
+		initialMessages: data || [],
+	});
 
 	useEffect(() => {
-		const messageContainer = document.getElementById('message-container')
+		const messageContainer = document.getElementById("message-container");
 		if (messageContainer) {
-			messageContainer.scrollTo ({
+			messageContainer.scrollTo({
 				top: messageContainer.scrollHeight,
-				behavior: 'smooth'
-			})
+				behavior: "smooth",
+			});
 		}
-	}, [messages])
+	}, [messages]);
 
 	return (
 		<div className='relative max-h-screen' id='message-container'>

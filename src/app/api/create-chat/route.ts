@@ -30,11 +30,10 @@ export async function POST(req: NextRequest, res:NextResponse){
             insertedId: chats.id,
         })
 
-        console.log(chatId[0].insertedId);
         return NextResponse.json({chatId: chatId[0].insertedId},{ status: 200 });
     }
     catch(error) {
-        console.log(error);
+        // console.log(error);
         return NextResponse.json(
             { error: "Internal Server Error!" },
             { status: 500 }
