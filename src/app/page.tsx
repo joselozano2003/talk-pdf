@@ -1,27 +1,32 @@
 import { Button } from '@/components/ui/button'
 import { UserButton, auth } from '@clerk/nextjs'
 import Link from 'next/link'
-import { LogIn } from 'lucide-react'
+import { ArrowRight, LogIn, Subscript } from 'lucide-react'
 import FileUpload from '@/components/FileUpload'
 
 import { db } from "@/lib/db";
 import { chats } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
+import { checkSubscription } from '@/lib/subscription'
+import SubscriptionButton from '@/components/SubscriptionButton'
 
 //29.09
 export default async function Home() {
 
-	let firstChatId = null;
+	let firstChatId;
 
 	const { userId } : { userId: string | null } = auth();
 
 	const isAuth = !!userId
 
-	const userChats = await db.select().from(chats).where(eq(chats.userId, userId!))
-
 	if (userId) {
-		firstChatId = userChats[0].id
+		const _chats = await db.select().from(chats).where(eq(chats.userId, userId!))
+		if (_chats){
+			firstChatId = _chats[0].id
+		}
 	}
+
+	const isPro = await checkSubscription()
 
 	return (
 		<div className='w-screen min-h-screen bg-gradient-to-r from-white via-cyan-400 to-rose-100'>
@@ -33,9 +38,12 @@ export default async function Home() {
 					</div>
 
 					<div className='flex mt-2'>
-						{isAuth && 
+						<div className='mr-3'>
+							<SubscriptionButton isPro={isPro}/>
+						</div>
+						{isAuth && firstChatId &&
 							<Link href={`/chat/${firstChatId}`}>
-								<Button>Go to Chats</Button>
+								<Button>Go to Chats <ArrowRight className='ml-2'/></Button>
 							</Link>
 						}
 					</div>
