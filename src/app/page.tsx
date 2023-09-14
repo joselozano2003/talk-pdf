@@ -20,9 +20,11 @@ export default async function Home() {
 	const isAuth = !!userId
 
 	if (userId) {
-		const _chats = await db.select().from(chats).where(eq(chats.userId, userId!))
-		if (_chats){
-			firstChatId = _chats[0].id
+		firstChatId = await db.select().from(chats).where(eq(chats.userId, userId!))
+		console.log(firstChatId)
+		if (firstChatId){
+			firstChatId = firstChatId[0]
+			console.log(firstChatId)
 		}
 	}
 
@@ -42,7 +44,7 @@ export default async function Home() {
 							<SubscriptionButton isPro={isPro}/>
 						</div>
 						{isAuth && firstChatId &&
-							<Link href={`/chat/${firstChatId}`}>
+							<Link href={`/chat/${firstChatId.id}`}>
 								<Button>Go to Chats <ArrowRight className='ml-2'/></Button>
 							</Link>
 						}
