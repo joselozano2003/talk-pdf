@@ -40,13 +40,16 @@ export default async function Home() {
 					</div>
 
 					<div className='flex mt-2'>
-						<div className='mr-3'>
-							<SubscriptionButton isPro={isPro}/>
-						</div>
 						{isAuth && firstChatId &&
-							<Link href={`/chat/${firstChatId.id}`}>
-								<Button>Go to Chats <ArrowRight className='ml-2'/></Button>
-							</Link>
+							<div className='flex flex-row'>
+								<div className='mr-3'>
+									<SubscriptionButton isPro={isPro}/>
+								</div>
+					
+								<Link href={`/chat/${firstChatId.id}`}>
+									<Button>Go to Chats <ArrowRight className='ml-2'/></Button>
+								</Link>
+							</div>
 						}
 					</div>
 

@@ -46,10 +46,6 @@ const ChatSideBar = ({ chats, chatId, isPro }: Props) => {
             </div>
 
             <div className="flex flex-row justify-around">
-                <div className="flex items-center gap-2 text-sm text-slate-500 flex-wrap">
-                    <Link href="/">Home</Link>
-                    <Link href="/">Source</Link>
-                </div>
                 <SubscriptionButton isPro={isPro} />
             </div>
         </div>
